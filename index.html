@@ -21,7 +21,7 @@
 
 	<div id="container">
 		<header class="clearfix">
-			<h1><span>Open Source</span> Exchange Rates</h1>
+			<h1><span>open source</span> Exchange Rates</h1>
 			<h2>No access fees, no rate limits, no ugly XML - just free, hourly updated exchange rates in JSON format</h2>
 		</header>
 
@@ -35,11 +35,11 @@
 
 			<p>APIs do exist, but they either cost between $20 and $500 per month for access, or the data is buried in an horrendous mess of unusable XML. Until now, there was no central place where exchange rates could be reliably sourced, for free, with no usage limits.</p>
 
-			<p>The &lsquo;API&rsquo; is powered by a simple nodeJS scraper and a list of currencies. Every hour, <a href="http://currencybot.github.com" title="Currency Bot" target="_blank">Currency Bot</a> collects all the exchange rates from the Google Calculator API (one by one), then pushes them in <acronym title="JavaScript Object Notation">JSON</acronym> format to a public GitHub code repository, for everybody to use as a de-facto API (<a href="http://github.com/currencybot/open-exchange-rates" title="currencybot/open-exchange-rates github api">currencybot/open-exchange-rates</a>).</p>
+			<p>The &lsquo;API&rsquo; is powered by a simple nodeJS scraper and a list of currencies. Every hour, <a href="http://currencybot.github.com" title="Currency Bot" target="_blank">Currency Bot</a> collects all the exchange rates from the Google Calculator API (one by one), then pushes them in <acronym title="JavaScript Object Notation">JSON</acronym> format to a public GitHub code repository for everybody to use.</p>
 			<p>The rates are available historically for any day since the project started, and could soon be extended to provide data going back several years.</p>
 			<p>All rates are relative to USD (currently) - you only need the conversion rates relative to any single currency in order to compute the rate between any other two currencies - see the documentation for more.</p>
-			
-			<p>The code/data repository is hosted on GitHub: <strong><a href="http://github.com/currencybot/open-exchange-rates" title="currencybot/open-exchange-rates github api">currencybot/open-exchange-rates</a></strong></p>
+
+			<p>The code and data are available at <a href="http://github.com/currencybot/open-exchange-rates" title="currencybot/open-exchange-rates github api">currencybot/open-exchange-rates</a>, and mirrored with friendly <code>Access-Control</code> HTTP headers (for cross-domain/AJAX requests) on <a href="http://openexchangerates.org/latest.php" title="openexchangerates.org API proxy service" target="_blank">openexchangerates.org</a>.</p>
 
 
 			<h3>API Design and Specification</h3>
@@ -55,15 +55,24 @@
 	"rates": {
 		"AED": 3.67290571,
 		"ANG": 1.75999944,
-		/* 87 currencies available - see <strong>[<a href="https://raw.github.com/currencybot/open-exchange-rates/master/latest.json" title="latest currency conversion rates">latest.json</a>]</strong> */
+		/* 87 currencies available - see [<a href="https://raw.github.com/currencybot/open-exchange-rates/master/latest.json" title="latest currency conversion rates">latest.json</a>] */
 		"ZAR": 7.85249867,
 		"ZMK": 4878.04878
 	}
 }</pre>
 
+			<h4>Accessing the API (available URLs)</h4>
+
+			<p>The Open Source Exchange Rates API is available on GitHub (via the direct 'raw' link to the JSON data files) and also available via a proxy (with cross-domain requests allowed) at openexchangerates.org.</p>
+			<p>The <code><a href="https://raw.github.com/currencybot/open-exchange-rates/master/latest.json" title="latest exchange rates json">latest.json</a></code> file always contains the most up-to-date exchange rates:
+			<br/><code><small>https://raw.github.com/currencybot/open-exchange-rates/master/latest.json</small></code></p>
+			<p>For <strong>AJAX / cross-domain requests</strong> in JavaScript, though, the raw links will not work most of the time, because GitHub doesn't send the appropriate headers for cross-origin resource sharing, so you can also access the API via the proxy at <code><a href="http://openexchangerates.org/latest.php" title="openexchangerates.org API proxy service">openexchangerates.org/latest.php</a></code>.</p>
+			<p>The proxy will soon also include the historical files, too, not just yet though.</p>
+
+
 			<h4>Specification / Properties</h4>
 
-			<p>The API is delivered in <acronym title="JavaScript Object Notation">JSON</acronym> format, and available over HTTPS via the direct link to the GitHub file. Here's a description of every property in the returned API object:</p>
+			<p>The API is delivered in <acronym title="JavaScript Object Notation">JSON</acronym> format. Here's a description of every property in the returned API object:</p>
 
 			<h5>disclaimer</h5>
 
@@ -96,15 +105,9 @@
 	// etc...</pre>
 
 
-			<h4>Accessing the API (available URLs)</h4>
-			<p>For now, the API is only available on GitHub, via the direct link to the JSON data files (HTTPS only). In future, shortlinks or URL services may be provided.</p>
-			<p>The <code><strong><a href="https://raw.github.com/currencybot/open-exchange-rates/master/latest.json" title="latest exchange rates json">latest.json</a></strong></code> file always contains the most up-to-date exchange rates:</p>
-			<p><code><small>https://raw.github.com/currencybot/open-exchange-rates/master/latest.json</small></code></p>
-
-
 			<h4>Historical Data</h4>
 
-			<p>Historical exchange rate data are available for each day* since the project started, and could soon be extended to include data going back several years. You can access historical data snapshots, where available, in the format &lsquo;<code><strong>historical/<em>yyyy-mm-dd</em>.json</strong></code>&rsquo; (for example: <strong><a href="https://raw.github.com/currencybot/open-exchange-rates/master/historical/2011-10-09.json" title="Historical exhange rate data example">historical/2011-10-09.json</a></strong>)</p>
+			<p>Historical exchange rate data are available for each day* since the project started, and could soon be extended to include data going back several years. You can access historical data snapshots, where available, in the format &lsquo;<code><strong>historical/<em>yyyy-mm-dd</em>.json</strong></code>&rsquo; (for example: <a href="https://raw.github.com/currencybot/open-exchange-rates/master/historical/2011-10-09.json" title="Historical exhange rate data example">historical/2011-10-09.json</a>)</p>
 			<p>You can browse <a href="https://github.com/currencybot/open-exchange-rates/tree/master/historical" title="historical exchange rate data">available dates</a> in the repository. To access the raw data, click any file and then click 'raw' in the top right-hand corner.</p>
 			<p>The repository will soon include an index file (possibly 'available.json') which you can tap to find out which dates are available.</p>
 			<p><small><em>* You can delve down further and access the hourly data by looking at the file revisions for each of the historical daily files, or by cloning the git repository and checking out the commit messages.</em></small></p>
@@ -119,9 +122,9 @@
 		<footer>
 			<h3>Meet the team:</h3>
 			<ul>
-				<li><strong><a href="http://www.josscrowcroft.com" title="Joss" target="_blank">Joss</a></strong> - the guy who made money.js and the Open Source Exchange Rates project, accounting.js, MotionCAPTCHA, and a bunch of other things.</li>
-				<li><strong><a href="http://demandanalytics.com" title="demand analytics" target="_blank">demand analytics</a></strong> - the company sponsoring the hosting and development of money.js, the Exchange Rates project and several of Joss's other weird ideas.</li>
-				<li><strong><a href="http://currencybot.github.com" title="Currency Bot" target="_blank">Currency Bot</a></strong> - the affable droid who tirelessly collects exchange rate data, hour after hour, without fail (so far):</li>
+				<li><a href="http://www.josscrowcroft.com" title="Joss" target="_blank">Joss</a> - the guy who made money.js and the Open Source Exchange Rates project, accounting.js, MotionCAPTCHA, and a bunch of other things.</li>
+				<li><a href="http://demandanalytics.com" title="demand analytics" target="_blank">demand analytics</a> - the company sponsoring the hosting and development of money.js, the Exchange Rates project and several of Joss's other weird ideas.</li>
+				<li><a href="http://currencybot.github.com" title="Currency Bot" target="_blank">Currency Bot</a> - the affable droid who tirelessly collects exchange rate data, hour after hour, without fail (so far):</li>
 			</ul>
 			<p>
 				<img src="img/CurrencyBot.png" alt="currency bot portrait, donated by robohash.org" />

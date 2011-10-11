@@ -168,15 +168,12 @@ a,
 a:visited {
 	color:#297912;
 	text-decoration:none;
+	font-weight:bold;
 }
 a:hover,
 a:focus,
 a:active {
-	border-bottom:2px solid #398922;
-}
-strong a:hover,
-strong a:focus,
-strong a:active {
+	text-decoration:none;
 	border-bottom:3px solid #398922;
 }
 pre a,
