@@ -21,28 +21,30 @@
 
 	<div id="container">
 		<header class="clearfix">
-			<h1>Exchange Rates <span>open source API</span></h1>
-			<h2>No access fees, no rate limits, to messy XML - just free, hourly updated exchange rates in JSON format</h2>
+			<h1><span>Open Source</span> Exchange Rates</h1>
+			<h2>No access fees, no rate limits, no ugly XML - just free, hourly updated exchange rates in JSON format</h2>
 		</header>
 
 		<div id="main" role="main">
 
 			<p>The <strong>Open Source Exchange Rates API</strong> project was designed to address a glaring problem with exchange rate data on the internet: there's an untold number of free <em>currency conversion services</em>, but no free place to get the rates that power them.</p>
 
-			<h3>Introduction</h3>
+			<h4>Introduction</h4>
 
 			<p><em>&ldquo;They want <strong>how much</strong> for their exchange-rates API?!&rdquo;</em></p>
 
 			<p>APIs do exist, but they either cost between $20 and $500 per month for access, or the data is buried in an horrendous mess of unusable XML. Until now, there was no central place where exchange rates could be reliably sourced, for free, with no usage limits.</p>
 
-			<p>The &lsquo;API&rsquo; consists of a simple nodeJS scraper and a list of currencies. Every hour, <a href="http://currencybot.github.com" title="Currency Bot" target="_blank">Currency Bot</a> collects all the exchange rates from the Google Calculator API (one by one), then pushes them in <acronym title="JavaScript Object Notation">JSON</acronym> format to a public GitHub code repository, for everybody to use as a de-facto API.</p>
+			<p>The &lsquo;API&rsquo; is powered by a simple nodeJS scraper and a list of currencies. Every hour, <a href="http://currencybot.github.com" title="Currency Bot" target="_blank">Currency Bot</a> collects all the exchange rates from the Google Calculator API (one by one), then pushes them in <acronym title="JavaScript Object Notation">JSON</acronym> format to a public GitHub code repository, for everybody to use as a de-facto API (<a href="http://github.com/currencybot/open-exchange-rates" title="currencybot/open-exchange-rates github api">currencybot/open-exchange-rates</a>).</p>
 			<p>The rates are available historically for any day since the project started, and could soon be extended to provide data going back several years.</p>
-			<p>All rates are relative to USD (<code>1:1</code>) - you only need the conversion rates relative to any single currency in order to compute the rate between any other two currencies - see the documentation for more.</p>
+			<p>All rates are relative to USD (currently) - you only need the conversion rates relative to any single currency in order to compute the rate between any other two currencies - see the documentation for more.</p>
+			
+			<p>The code/data repository is hosted on GitHub: <strong><a href="http://github.com/currencybot/open-exchange-rates" title="currencybot/open-exchange-rates github api">currencybot/open-exchange-rates</a></strong></p>
 
 
 			<h3>API Design and Specification</h3>
 
-			<h4>Preview the data:</h4>
+			<h4>Data Preview:</h4>
 
 			<p>Currencies are represented by their international 3-letter codes. The exchange rates are updated hourly and stored in JSON format, for maximum portability, usability and fun.</p>
 			<pre class="prettyprint lang-js">{
@@ -58,17 +60,60 @@
 		"ZMK": 4878.04878
 	}
 }</pre>
-			<h4>API Design and Specification</h4>
-			<p>coming soon, like in a few hours</p>
+
+			<h4>Specification / Properties</h4>
+
+			<p>The API is delivered in <acronym title="JavaScript Object Notation">JSON</acronym> format, and available over HTTPS via the direct link to the GitHub file. Here's a description of every property in the returned API object:</p>
+
+			<h5>disclaimer</h5>
+
+			<p>A reminder to anybody using/viewing the API data (possibly out-of-context) that its accuracy and availability are never guaranteed, and that there's no warranty provided. I'm open to rewriting this if anybody has suggestions on what to include (I'm no legal boffin!)</p>
+			<pre class="prettyprint">"disclaimer": "This data is collected from Google Calculator and provided free of charge for informational purposes only, with no guarantee whatsoever of accuracy, validity, availability or fitness for any purpose; use at your own risk. Other than that - have fun, and please share/watch/fork if you think data like this should be free!"</pre>
+
+			<h5>license</h5>
+
+			<p>Similar to the <code>disclaimer</code>, if people see this API out-of-context, it's important that they realise it's free and open source:</p>
+			<pre class="prettyprint">"license": "http://www.opensource.org/licenses/GPL-3.0"</pre>
+			
+			<h5>timestamp</h5>
+
+			<p>The <code>timestamp</code> (UNIX time) is given so that users/developers can check when this data was gathered. This could be useful for determining whether the file is up-to-date or providing an <em>&ldquo;Exchange Rates collected on: [date]&rdquo;</em> message, and is especially handy when accessing historical data.</p>
+			<p>NB: the <code>timestamp</code> is given in UNIX time, which is seconds since the UNIX epoch - if you're using the value in JavaScript, remember to multiply it by 1000 as JavaScript uses milliseconds instead of seconds.</p>
+			<pre class="prettyprint">"timestamp": 1318326416</pre>
+
+			<h5>base</h5>
+
+			<p>The base currency to which all the exchange rates are relative. This currency is also given in the <code>rates</code> object (e.g. <code>"USD" : 1</code>). Knowing the base currency for the exchange rates, it's possible to compute the rate between any other two currencies.</p>
+			<p>NB: <code>base</code> is always <code>"USD"</code>, at least for now, but it's good practice to double-check.</p>
+			<pre class="prettyprint">"base": "USD"</pre>
+
+			<h5>rates</h5>
+			<p>The object containing all the conversion rates for all of the available currencies, labeled by their international-standard 3-letter currency codes.</p>
+			<p>All the values in <code>rates</code> are relative to the <code>base</code> currency (e.g. <code>1 USD : AED 3.67</code>), and the <code>base</code> currency is included (e.g. <code>"USD": 1</code>). It's possible to compute the rate between any of the currencies by taking into account the <code>base</code> rate; see the <a href="#documentation" title="open source exchange rates documentation">documentation</a> for more on this.</p>
+			<pre class="prettyprint">"rates": {
+	"AED": 3.67290571,
+	"ANG": 1.75999944,
+	// etc...</pre>
+
+
+			<h4>Accessing the API (available URLs)</h4>
+			<p>For now, the API is only available on GitHub, via the direct link to the JSON data files (HTTPS only). In future, shortlinks or URL services may be provided.</p>
+			<p>The <code><strong><a href="https://raw.github.com/currencybot/open-exchange-rates/master/latest.json" title="latest exchange rates json">latest.json</a></strong></code> file always contains the most up-to-date exchange rates:</p>
+			<p><code><small>https://raw.github.com/currencybot/open-exchange-rates/master/latest.json</small></code></p>
 
 
 			<h4>Historical Data</h4>
-			<p>Historical exchange rate data are available for each day since the project started, and could soon be extended to include data going back several years. You can access historical data snapshots, where available, in the format &lsquo;<code><strong>historical/<em>yyyy-mm-dd</em>.json</strong></code>&rsquo; (for example: <strong><a href="https://raw.github.com/currencybot/open-exchange-rates/master/historical/2011-10-09.json" title="Historical exhange rate data example">historical/2011-10-09.json</a></strong></p>
+
+			<p>Historical exchange rate data are available for each day* since the project started, and could soon be extended to include data going back several years. You can access historical data snapshots, where available, in the format &lsquo;<code><strong>historical/<em>yyyy-mm-dd</em>.json</strong></code>&rsquo; (for example: <strong><a href="https://raw.github.com/currencybot/open-exchange-rates/master/historical/2011-10-09.json" title="Historical exhange rate data example">historical/2011-10-09.json</a></strong>)</p>
+			<p>You can browse <a href="https://github.com/currencybot/open-exchange-rates/tree/master/historical" title="historical exchange rate data">available dates</a> in the repository. To access the raw data, click any file and then click 'raw' in the top right-hand corner.</p>
+			<p>The repository will soon include an index file (possibly 'available.json') which you can tap to find out which dates are available.</p>
+			<p><small><em>* You can delve down further and access the hourly data by looking at the file revisions for each of the historical daily files, or by cloning the git repository and checking out the commit messages.</em></small></p>
 
 
-			<h3 id="documentation">Documentation</h3>
 
-			<p>Should be finished soon.</p>
+			<h3 id="documentation">Documentation &amp; Guides</h3>
+
+			<p>Coming soon...</p>
 
 		</div>
 		<footer>
