@@ -1,1 +1,103 @@
-brb real quick
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>		<html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>		<html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title>Open Source Exchange Rates JSON API</title>
+	<meta name="description" content="free exchange rates JSON api, updated hourly, no rate limits.">
+	<meta name="author" content="Joss Crowcroft">
+	<link rel="shortcut icon" href="http://faviconist.com/icons/cd72e2203304ac336db27f25340e8177/favicon.ico" />
+
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+	<div id="container">
+		<header class="clearfix">
+			<h1>Exchange Rates <span>open source API</span></h1>
+			<h2>No access fees, no rate limits, to messy XML - just free, hourly updated exchange rates in JSON format</h2>
+		</header>
+
+		<div id="main" role="main">
+
+			<p>The <strong>Open Source Exchange Rates API</strong> project was designed to address a glaring problem with exchange rate data on the internet: there's an untold number of free <em>currency conversion services</em>, but no free place to get the rates that power them.</p>
+
+			<h3>Introduction</h3>
+
+			<p><em>&ldquo;They want <strong>how much</strong> for their exchange-rates API?!&rdquo;</em></p>
+
+			<p>APIs do exist, but they either cost between $20 and $500 per month for access, or the data is buried in an horrendous mess of unusable XML. Until now, there was no central place where exchange rates could be reliably sourced, for free, with no usage limits.</p>
+
+			<p>The &lsquo;API&rsquo; consists of a simple nodeJS scraper and a list of currencies. Every hour, <a href="http://currencybot.github.com" title="Currency Bot" target="_blank">Currency Bot</a> collects all the exchange rates from the Google Calculator API (one by one), then pushes them in <acronym title="JavaScript Object Notation">JSON</acronym> format to a public GitHub code repository, for everybody to use as a de-facto API.</p>
+			<p>The rates are available historically for any day since the project started, and could soon be extended to provide data going back several years.</p>
+			<p>All rates are relative to USD (<code>1:1</code>) - you only need the conversion rates relative to any single currency in order to compute the rate between any other two currencies - see the documentation for more.</p>
+
+
+			<h3>API Design and Specification</h3>
+
+			<h4>Preview the data:</h4>
+
+			<p>Currencies are represented by their international 3-letter codes. The exchange rates are updated hourly and stored in JSON format, for maximum portability, usability and fun.</p>
+			<pre class="prettyprint lang-js">{
+	"disclaimer": "This data is collected from Google Calculator and provided free of charge for informational purposes only, with no guarantee whatsoever of accuracy, validity, availability or fitness for any purpose; use at your own risk. Other than that - have fun, and please share/watch/fork if you think data like this should be free!",
+	"license": "http://www.opensource.org/licenses/GPL-3.0",
+	"timestamp": 1318326416,
+	"base": "USD",
+	"rates": {
+		"AED": 3.67290571,
+		"ANG": 1.75999944,
+		/* 87 currencies available - see <strong>[<a href="https://raw.github.com/currencybot/open-exchange-rates/master/latest.json" title="latest currency conversion rates">latest.json</a>]</strong> */
+		"ZAR": 7.85249867,
+		"ZMK": 4878.04878
+	}
+}</pre>
+			<h4>API Design and Specification</h4>
+			<p>coming soon, like in a few hours</p>
+
+
+			<h4>Historical Data</h4>
+			<p>Historical exchange rate data are available for each day since the project started, and could soon be extended to include data going back several years. You can access historical data snapshots, where available, in the format &lsquo;<code><strong>historical/<em>yyyy-mm-dd</em>.json</strong></code>&rsquo; (for example: <strong><a href="https://raw.github.com/currencybot/open-exchange-rates/master/historical/2011-10-09.json" title="Historical exhange rate data example">historical/2011-10-09.json</a></strong></p>
+
+
+			<h3 id="documentation">Documentation</h3>
+
+			<p>Should be finished soon.</p>
+
+		</div>
+		<footer>
+			<h3>Meet the team:</h3>
+			<ul>
+				<li><strong><a href="http://www.josscrowcroft.com" title="Joss" target="_blank">Joss</a></strong> - the guy who made money.js and the Open Source Exchange Rates project, accounting.js, MotionCAPTCHA, and a bunch of other things.</li>
+				<li><strong><a href="http://demandanalytics.com" title="demand analytics" target="_blank">demand analytics</a></strong> - the company sponsoring the hosting and development of money.js, the Exchange Rates project and several of Joss's other weird ideas.</li>
+				<li><strong><a href="http://currencybot.github.com" title="Currency Bot" target="_blank">Currency Bot</a></strong> - the affable droid who tirelessly collects exchange rate data, hour after hour, without fail (so far):</li>
+			</ul>
+			<p>
+				<img src="img/CurrencyBot.png" alt="currency bot portrait, donated by robohash.org" />
+			</p>
+		</footer>
+	</div>
+
+	<script src="js/prettify.js"></script>
+	<script type="text/javascript">prettyPrint();</script>
+	
+	<script> // Change UA-XXXXX-X to be your site's ID
+		window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];
+		Modernizr.load({
+			load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
+		});
+	</script>
+
+	<!--[if lt IE 7 ]>
+		<script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+		<script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+	<![endif]-->
+	
+</body>
+</html>
