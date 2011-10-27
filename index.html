@@ -52,29 +52,48 @@
 
 			<p>Currencies are represented by their international 3-letter codes. The exchange rates are updated hourly and stored in JSON format, for maximum portability, usability and fun.</p>
 			<pre class="prettyprint lang-js">{
-	"disclaimer": "This data is collected from Google Calculator and provided free of charge for informational purposes only, with no guarantee whatsoever of accuracy, validity, availability or fitness for any purpose; use at your own risk. Other than that - have fun, and please share/watch/fork if you think data like this should be free!",
-	"license": "http://www.opensource.org/licenses/GPL-3.0",
-	"timestamp": 1318326416,
+	"disclaimer": "This data is collected from various providers and provided free of charge for informational purposes only, with no guarantee whatsoever of accuracy, validity, availability or fitness for any purpose; use at your own risk. Other than that - have fun, and please share/watch/fork if you think data like this should be free!",
+	"license": "all code open-source under GPL v3 [http://www.opensource.org/licenses/GPL-3.0]. all data made available by various providers; copyright may apply; not for resale; no warranties given.",
+	"timestamp": 1319730758,
 	"base": "USD",
 	"rates": {
-		"AED": 3.67270337,
-		"ANG": 1.75999944,
-		"ARS": 4.20900221,
-		/* 87 currencies available - see [<a href="https://raw.github.com/currencybot/open-exchange-rates/master/latest.json" title="latest currency conversion rates" target="_blank">latest.json</a>] */
-		"YER": 217.864924,
-		"ZAR": 7.85249867,
-		"ZMK": 4878.04878
+		"AED": 3.66999956,
+		"ALL": 99.51125044,
+		/* 120+ currencies available - see [<a href="https://raw.github.com/currencybot/open-exchange-rates/master/latest.json" title="latest currency conversion rates" target="_blank">latest.json</a>] */
+		"YER": 213.77629395,
+		"ZAR": 7.71093289,
+		"ZMK": 3552.79927881
 	}
 }</pre>
+			<p>You can also access a list of available currencies with their full names:</p>
+			<pre class="prettyprint lang-js">{
+	"AED": "United Arab Emirates Dirham",
+	"ALL": "Albanian Lek",
+	"ANG": "Neth Antilles Guilder",
+	"ARS": "Argentine Peso",
+	/* see [<a href="https://raw.github.com/currencybot/open-exchange-rates/master/currencies.json" title="open exchange rates project - available currencies" target="_blank">currencies.json</a>] for the full list */</pre>
+
 
 			<h4>Accessing the API (available URLs)</h4>
 
-			<p>The Open Source Exchange Rates API is available on GitHub (via the direct 'raw' link to the JSON data files) and also available via a proxy (with cross-domain requests allowed) at openexchangerates.org.</p>
+			<p>The Open Source Exchange Rates API is available on GitHub (via the direct 'raw' link to the JSON data files) and also available via a proxy (with friendly <code>Access-Control</code> headers for cross-domain AJAX requests) at openexchangerates.org.</p>
 			<p>The <a href="https://raw.github.com/currencybot/open-exchange-rates/master/latest.json" title="latest exchange rates json">latest.json</a> file always contains the most up-to-date exchange rates:</p>
 			<pre>https://raw.github.com/currencybot/open-exchange-rates/master/latest.json</pre>
-			<p>For <strong>AJAX / cross-domain requests</strong> in JavaScript, though, the raw links will not work most of the time, because GitHub doesn't send the appropriate headers for cross-origin resource sharing, so you can also access the API via the proxy at <a href="http://openexchangerates.org/latest.php" title="openexchangerates.org API proxy service">openexchangerates.org</a></code>:</p>
-			<pre>http://openexchangerates.org/latest.php</pre>
-			<p>The proxy will soon also include the historical files, too, not just yet though.</p>
+			<p>For <strong>AJAX / cross-domain requests</strong> in JavaScript, though, the raw links will not work most of the time, because GitHub doesn't send the appropriate headers for cross-origin resource sharing, so you can also access the API via the proxy at <a href="http://openexchangerates.org/latest.json" title="openexchangerates.org API proxy service">openexchangerates.org</a></code>:</p>
+			<pre>http://openexchangerates.org/latest.json
+http://openexchangerates.org/currencies.json
+http://openexchangerates.org/historical/2011-10-18.json</pre>
+
+
+
+			<h4>Historical Data</h4>
+
+			<p>Historical exchange rate data are available for each day* since the project started (and could soon be extended to include data going all the way back to 1971!)</p>
+			<p>You can access historical data snapshots, where available, in the format &lsquo;<code><strong>historical/<em>yyyy-mm-dd</em>.json</strong></code>&rsquo; (for example: <a href="https://raw.github.com/currencybot/open-exchange-rates/master/historical/2011-10-09.json" title="Historical exhange rate data">historical/2011-10-09.json</a>.) They're also available via the openexchangerates.org proxy service (see URLs, above).</p>
+			<p>You can browse <a href="https://github.com/currencybot/open-exchange-rates/tree/master/historical" title="historical exchange rate data">available dates</a> in the repository. To access the raw data, click any file and then click 'raw' in the top right-hand corner.</p>
+			<p>The repository will soon include an index file (possibly 'available.json') which you can tap to find out which dates are available.</p>
+			<p><small><em>* You can delve down further and access the hourly data by looking at the file revisions for each of the historical daily files, or by cloning the git repository and checking out the commit messages. If you <strong>really</strong> wanted to, that is.</em></small></p>
+
 
 
 			<h4>Specification / Properties</h4>
@@ -84,17 +103,17 @@
 			<h5>disclaimer</h5>
 
 			<p>A reminder to anybody using/viewing the API data (possibly out-of-context) that its accuracy and availability are never guaranteed, and that there's no warranty provided. I'm open to rewriting this if anybody has suggestions on what to include (I'm no legal boffin!)</p>
-			<pre class="prettyprint">"disclaimer": "This data is collected from Google Calculator and provided free of charge for informational purposes only, with no guarantee whatsoever of accuracy, validity, availability or fitness for any purpose; use at your own risk. Other than that - have fun, and please share/watch/fork if you think data like this should be free!"</pre>
+			<pre class="prettyprint">"disclaimer": "This data is collected from various providers and provided free of charge for informational purposes only, with no guarantee whatsoever of accuracy, validity, availability or fitness for any purpose; use at your own risk. Other than that - have fun, and please share/watch/fork if you think data like this should be free!"</pre>
 
 			<h5>license</h5>
 
 			<p>Similar to the <code>disclaimer</code>, if people see this API out-of-context, it's important that they realise it's free and open source:</p>
-			<pre class="prettyprint">"license": "http://www.opensource.org/licenses/GPL-3.0"</pre>
+			<pre class="prettyprint">"license": "all code open-source under GPL v3 [http://www.opensource.org/licenses/GPL-3.0]. all data made available by various providers; copyright may apply; not for resale; no warranties given."</pre>
 			
 			<h5>timestamp</h5>
 
 			<p>The <code>timestamp</code> (UNIX time) is given so that users/developers can check when this data was gathered. This could be useful for determining whether the file is up-to-date or providing an <em>&ldquo;Exchange Rates collected on: [date]&rdquo;</em> message, and is especially handy when accessing historical data.</p>
-			<p>NB: the <code>timestamp</code> is given in UNIX time, which is seconds since the UNIX epoch - if you're using the value in JavaScript, remember to multiply it by 1000 as JavaScript uses milliseconds instead of seconds.</p>
+			<p>NB: If you're using the <code>timestamp</code> value in JavaScript, remember to multiply it by 1000 as JavaScript uses time in milliseconds instead of seconds.</p>
 			<pre class="prettyprint">"timestamp": 1318326416</pre>
 
 			<h5>base</h5>
@@ -112,26 +131,19 @@
 	// etc...</pre>
 
 
-			<h4>Historical Data</h4>
-
-			<p>Historical exchange rate data are available for each day* since the project started, and could soon be extended to include data going back several years. You can access historical data snapshots, where available, in the format &lsquo;<code><strong>historical/<em>yyyy-mm-dd</em>.json</strong></code>&rsquo; (for example: <a href="https://raw.github.com/currencybot/open-exchange-rates/master/historical/2011-10-09.json" title="Historical exhange rate data example">historical/2011-10-09.json</a>)</p>
-			<p>You can browse <a href="https://github.com/currencybot/open-exchange-rates/tree/master/historical" title="historical exchange rate data">available dates</a> in the repository. To access the raw data, click any file and then click 'raw' in the top right-hand corner.</p>
-			<p>The repository will soon include an index file (possibly 'available.json') which you can tap to find out which dates are available.</p>
-			<p><small><em>* You can delve down further and access the hourly data by looking at the file revisions for each of the historical daily files, or by cloning the git repository and checking out the commit messages.</em></small></p>
-
-
-
 			<h3 id="documentation">Documentation &amp; Guides</h3>
 
 			<p>Coming soon...</p>
+
+
 
 		</div>
 		<footer>
 			<h3>Meet the team:</h3>
 			<ul>
-				<li><a href="http://www.josscrowcroft.com" title="Joss" target="_blank">Joss</a> - the guy who made <a href="http://josscrowcroft.github.com/money.js/" title="money.js - tiny (1kb) javascript library for real-time currency conversion">money.js</a> and the Open Source Exchange Rates project, accounting.js, MotionCAPTCHA, and a bunch of other things.</li>
-				<li><a href="http://demandanalytics.com" title="demand analytics" target="_blank">demand analytics</a> - the company sponsoring the hosting and development of money.js, the Exchange Rates project and several of Joss's other weird ideas.</li>
-				<li><a href="http://currencybot.github.com" title="Currency Bot" target="_blank">Currency Bot</a> - the affable droid who tirelessly collects exchange rate data, hour after hour, without fail (so far):</li>
+				<li><a href="http://www.josscrowcroft.com" title="Joss" target="_blank">Joss</a> - designer / author of this project, as well as <a href="http://josscrowcroft.github.com/money.js/" title="money.js - tiny (1kb) javascript library for real-time currency conversion">money.js</a>, <a href="http://josscrowcroft.github.com/accounting.js" title="accounting.js - format money and numbers in javascript">accounting.js</a>, <a href="http://www.josscrowcroft.com/demos/motioncaptcha/" title="motionCAPTCHA - stop spam, draw shapes">motionCAPTCHA</a>, and a few other things; writes about JavaScript, CSS, design and other niceties.</li>
+				<li><a href="http://demandanalytics.com" title="demand analytics" target="_blank">demand analytics</a> - the company sponsoring the hosting and development of the Open Exchange Rates project and several of Joss's other weird ideas.</li>
+				<li><a href="http://currencybot.github.com" title="Currency Bot" target="_blank">Currency Bot</a> - the affable (and deadly) droid who tirelessly collects exchange rate data, hour after hour, without fail (so far):</li>
 			</ul>
 			<p>
 				<img src="http://robohash.org/CurrencyBot.png" alt="currency bot, portrait donated by robohash.org" />
