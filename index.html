@@ -39,18 +39,18 @@
 
 			<p>APIs do exist, but they either cost between $20 and $500 per month for access, or the data is buried in an horrendous mess of unusable XML. Until now, there was no central place where exchange rates could be reliably sourced, for free, with no usage limits.</p>
 
-			<p>The &lsquo;API&rsquo; is powered by a simple nodeJS scraper and a list of currencies. Every hour, <a href="http://currencybot.github.com" title="Currency Bot" target="_blank">Currency Bot</a> collects all the exchange rates from the Google Calculator API (one by one), then pushes them in <acronym title="JavaScript Object Notation">JSON</acronym> format to a public GitHub code repository for everybody to use.</p>
+			<p>The &lsquo;API&rsquo; is powered by a simple nodeJS scraper and GitHub. Every hour, <a href="http://currencybot.github.com" title="Currency Bot" target="_blank">Currency Bot</a> collects all the exchange rates from various reliable providers with public-facing APIs, then pushes them in <acronym title="JavaScript Object Notation">JSON</acronym> format to a public GitHub code repository for everybody to use.</p>
 			<p>The rates are available historically for any day since the project started, and could soon be extended to provide data going back several years.</p>
 			<p>All rates are relative to USD (currently) - you only need the conversion rates relative to any single currency in order to compute the rate between any other two currencies - see the documentation for more.</p>
 
-			<p>The code and data are available at <a href="http://github.com/currencybot/open-exchange-rates" title="currencybot/open-exchange-rates github api">currencybot/open-exchange-rates</a>, and mirrored with friendly <code>Access-Control</code> HTTP headers (for cross-domain/AJAX requests) on <a href="http://openexchangerates.org/latest.php" title="openexchangerates.org API proxy service" target="_blank">openexchangerates.org</a>.</p>
+			<p>The code and data are available at <a href="http://github.com/currencybot/open-exchange-rates" title="currencybot/open-exchange-rates github api">currencybot/open-exchange-rates</a>, and mirrored with friendly <code>Access-Control</code> HTTP headers and optional <acronym title="JSON with Padding">JSONP</acronym> support (for cross-domain/AJAX requests) on the free proxy at <a href="http://openexchangerates.org/latest.php" title="openexchangerates.org API proxy service" target="_blank">openexchangerates.org</a>.</p>
 
 
 			<h3>API Design and Specification</h3>
 
 			<h4>Data Preview:</h4>
 
-			<p>Currencies are represented by their international 3-letter codes. The exchange rates are updated hourly and stored in JSON format, for maximum portability, usability and fun.</p>
+			<p>Currencies are represented by their international 3-letter codes. The exchange rates are updated hourly and stored in JSON format, for maximum portability, usability and fun:</p>
 			<pre class="prettyprint lang-js">{
 	"disclaimer": "This data is collected from various providers and provided free of charge for informational purposes only, with no guarantee whatsoever of accuracy, validity, availability or fitness for any purpose; use at your own risk. Other than that - have fun, and please share/watch/fork if you think data like this should be free!",
 	"license": "all code open-source under GPL v3 [http://www.opensource.org/licenses/GPL-3.0]. all data made available by various providers; copyright may apply; not for resale; no warranties given.",
@@ -76,29 +76,33 @@
 
 			<h4>Accessing the API (available URLs)</h4>
 
-			<p>The Open Source Exchange Rates API is available on GitHub (via the direct 'raw' link to the JSON data files) and also available via a proxy (with friendly <code>Access-Control</code> headers for cross-domain AJAX requests) at openexchangerates.org.</p>
+			<p>The Open Source Exchange Rates API is available on GitHub (via the direct 'raw' link to the JSON data files) and also available via a proxy (with friendly <code>Access-Control</code> headers and JSONP support, for cross-domain/AJAX requests) at openexchangerates.org.</p>
 			<p>The <a href="https://raw.github.com/currencybot/open-exchange-rates/master/latest.json" title="latest exchange rates json">latest.json</a> file always contains the most up-to-date exchange rates:</p>
 			<pre>https://raw.github.com/currencybot/open-exchange-rates/master/latest.json</pre>
-			<p>For <strong>AJAX / cross-domain requests</strong> in JavaScript, though, the raw links will not work most of the time, because GitHub doesn't send the appropriate headers for cross-origin resource sharing, so you can also access the API via the proxy at <a href="http://openexchangerates.org/latest.json" title="openexchangerates.org API proxy service">openexchangerates.org</a></code>:</p>
+			<p>For <strong>AJAX / cross-domain requests</strong> in JavaScript, the raw links will not work in many situations, because GitHub doesn't send the appropriate headers for cross-origin resource sharing (in most browsers you will see an error saying "Origin [yourdomain] is not allowed by..." - so you can also access the API via the proxy at <a href="http://openexchangerates.org/latest.json" title="openexchangerates.org API proxy service">openexchangerates.org</a></code>:</p>
 			<pre>http://openexchangerates.org/latest.json
 http://openexchangerates.org/currencies.json
 http://openexchangerates.org/historical/2011-10-18.json</pre>
+
+			<p>The openexchangerates.org proxy also supports <strong><acronym title="JSON with Padding">JSONP</acronym> requests</strong>, if you're into that kinda thing. Just append <code>?callback=<em>[someFunction]</em></code> to any valid URL, and the data will be returned wrapped in the callback function you specify, as long as it's a valid method name:</p>
+
+			<pre>http://openexchangerates.org/latest.json<strong>?callback=<em>myCallback</em></strong></pre>
 
 
 
 			<h4>Historical Data</h4>
 
-			<p>Historical exchange rate data are available for each day* since the project started (and could soon be extended to include data going all the way back to 1971!)</p>
+			<p>Historical exchange rate data are available for every day* since 1991 (thanks to an epic 400,000-line pull request!)</p>
 			<p>You can access historical data snapshots, where available, in the format &lsquo;<code><strong>historical/<em>yyyy-mm-dd</em>.json</strong></code>&rsquo; (for example: <a href="https://raw.github.com/currencybot/open-exchange-rates/master/historical/2011-10-09.json" title="Historical exhange rate data">historical/2011-10-09.json</a>.) They're also available via the openexchangerates.org proxy service (see URLs, above).</p>
-			<p>You can browse <a href="https://github.com/currencybot/open-exchange-rates/tree/master/historical" title="historical exchange rate data">available dates</a> in the repository. To access the raw data, click any file and then click 'raw' in the top right-hand corner.</p>
-			<p>The repository will soon include an index file (possibly 'available.json') which you can tap to find out which dates are available.</p>
-			<p><small><em>* You can delve down further and access the hourly data by looking at the file revisions for each of the historical daily files, or by cloning the git repository and checking out the commit messages. If you <strong>really</strong> wanted to, that is.</em></small></p>
+			<p>You can browse <a href="https://github.com/currencybot/open-exchange-rates/tree/master/historical" title="historical exchange rate data">available dates</a> in the repository, although there's currently close to 4,000 files in that one directory, so listing it may take a long time (they might be sorted into directories by year soon.) To access the raw data, click any file and then click 'raw' in the top right-hand corner.</p>
+			<p>The repository will soon include an index file (possibly 'available.json') which you can hit up, to find out which dates are available in an application.</p>
+			<p><small><em>* You can delve down further and access the hourly data for every day since the project started by looking at the file revisions for each of the historical daily files, or by cloning the git repository and checking out the commit messages. If you <strong>really</strong> wanted to, that is.</em></small></p>
 
 
 
 			<h4>Specification / Properties</h4>
 
-			<p>The API is delivered in <acronym title="JavaScript Object Notation">JSON</acronym> format. Here's a description of every property in the returned API object:</p>
+			<p>The API is delivered in <acronym title="JavaScript Object Notation">JSON</acronym> format. Here's a description of every property in the JSON object:</p>
 
 			<h5>disclaimer</h5>
 
@@ -129,9 +133,10 @@ http://openexchangerates.org/historical/2011-10-18.json</pre>
 	"AED": 3.67290571,
 	"ANG": 1.75999944,
 	// etc...</pre>
+			<p>You can use <a href="https://raw.github.com/currencybot/open-exchange-rates/master/currencies.json" title="open exchange rates project - available currencies" target="_blank">currencies.json</a> for a JSON-formatted mapping between the three-letter currency codes and the full currency names.</p>
 
 
-			<h3 id="documentation">Documentation &amp; Guides</h3>
+			<h3 id="documentation">Documentation &amp; Examples</h3>
 
 			<p>Coming soon...</p>
 
