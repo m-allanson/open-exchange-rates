@@ -137,9 +137,130 @@ http://openexchangerates.org/historical/2011-10-18.json</pre>
 
 
 			<h3 id="documentation">Documentation &amp; Examples</h3>
+			
+			<p>Here's a couple of examples demonstrating how you can use the Open Exchange Rate data in your applications. The first section is a run-through of basic currency conversion maths, followed by some examples in JavaScript (both with <a href="http://josscrowcroft.github.com/money.js/" title="money.js - tiny (1kb) javascript library for real-time currency conversion">money.js</a> and plain ol' JS code.)</p>
+			<p>If you're up to speed on all that and just want to get the data in your application or site, skip straight to the implementation details.</p>
+			
+			<ul>
+				<li><h5>Use the rates:</h5>
+					<ul>
+						<li><a href="#how-to-use" title="Currency Conversion 101: how to use the exchange rates">Currency Conversion 101: how to use the exchange rates</a></li>
+						<li><a href="#javascript-examples" title="JavaScript / money.js">JavaScript examples - with/without money.js</a></li>
+					</ul>
+				</li>
+				<li><h5>Get the rates:</h5>
+					<ul>
+						<li><a href="#javascript-ajax-jquery" title="JavaScript (AJAX / jQuery)">JavaScript (AJAX / jQuery)</a></li>
+						<li><a href="#nodejs-npm" title="nodeJS / npm module">nodeJS (<em>npm</em> module)</a></li>
+						<li><a href="#nodejs-httpagent" title="nodeJS / httpAgent">nodeJS (httpAgent)</a></li>
+						<li><a href="#php-curl" title="PHP (CURL)">PHP (CURL)</a></li>
+						<li><a href="#python" title="Python">Python</a></li>
+					</ul>
+				</li>
+			</ul>
+
+
+			<h4 id="how-to-use">Currency Conversion 101: how to use the exchange rates</h4>
+
+			<p>An exchange rate (a.k.a. foreign-exchange / forex / FX rate) between two currencies is the rate at which one currency may be exchanged for (or buy) another. Exchange rates change frequently (except on weekends) because currencies are traded on open markets, just like public companies.</p>
+			<p>Exchange rates are often quoted as a <em>currency pair</em>, which is the quotation of the <em>number of units of one currency that can be exchanged for a single unit of another currency</em>. For example, "1 Euro in US dollars" would be expressed as: <code>EUR/USD 1.2945</code>, where USD is the 'quote currency' (price currency / payment currency) and EUR is the 'base currency' (unit currency / transaction currency).</p>
+			
+			<h5>All rates relative to USD</h5>
+			<p>For consistency, all the rates in the Open Exchange Rates data are given relative to US Dollars, meaning that <code>USD</code> is always the 'base' currency (although there are a number of internationally-accepted currency pairs, such as <code>EUD/USD</code>, in which USD is the 'quote' currency.)</p>
+			<p>Therefore the value in <code>fx.rates</code> for British Pounds of <code>GBP: 0.6438</code> implies a currency pair of <code>USD/GBP 0.6438</code>, whereby "1 US Dollar buys 0.6438 British Pounds".</p>
+			
+			<h5>Inverse exchange rates</h5>
+			<p>If you have the rate between a 'base' and a 'quote' currency, you can simply <em>invert</em> the ratio (i.e. <code>1/x</code>) to find the reverse transactional value, so that <code>USD/AED 3.6731</code> (or <em>1 US Dollar to 3.6731 Dirhams</em>), inverted, becomes <code>AED/USD 0.2722</code> (or <em>1 Dirham to 0.2722 US Dollars</em>).</p>
+
+			<h5>Cross-pairs: Finding the rate between any two currencies, relative to USD</h5>
+			<p>Given that we know all of the exchange rates relative to a 'base' currency (USD), we can easily calculate the rate between any of the 'quote' currencies given in <code>fx.rates</code> by multiplying the rates together as below.</p>
+			<p>For example, if you need to convert British Pounds (GBP) to Hong Kong Dollars (HKD), the calculation is equal to converting the GBP to USD first, <em>then</em> converting those USD to HKD - but we can do this in a single step.</p>
+			<pre class="prettyprint">// let usd_gbp = 0.6438, usd_hkd = 7.7668
+gbp_hkd = usd_hkd * (1 / usd_gbp)</pre>
+			<p>In other words, if you have the following exchange rates relative to US Dollars (the common 'base'): <code>USD/GBP 0.6438</code> and <code>USD/HKD 7.7668</code>, then you can calculate <code>GBP/HKD 12.0639</code> by multiplying 7.7668 by the inverse of 0.6438, or <code>7.7668 * (1 / 0.6438)</code>.</p>
+			
+			<h5>Go forth and multiply (currencies)</h5>
+			<p>That's the quickest run-down I could muster, but if there are any economists or mathematicians who want to offer a better explanation, please <a href="http://twitter.com/josscrowcroft" title="Joss Crowcroft on Twitter">get in touch</a> and let me know. I'm no professor and I'd love to get some improvements!</p>
+			<p>Incidentally, if you're working in JavaScript, <a href="http://josscrowcroft.github.com/money.js/" title="money.js - tiny (1kb) javascript library for real-time currency conversion">money.js</a> does all this for you, in just over 1kb.</p>
+
+
+			<h4 id="javascript-examples">JavaScript usage examples</h4>
+			
+			<p>Coming soon...</p>
+
+
+
+			<h3>Get the rates...</h3>
+
+			<h4 id="javascript-ajax-jquery">JavaScript (AJAX / jQuery)</h4>
+
+			<p>You can easily load the rates into an application or website with JavaScript. I recommend using jQuery because it'll save you a tonne of headaches, and statistically speaking, you're probably already using it in your page/app:</p>
+			<pre class="prettyprint">// Use jQuery.ajax to get the latest exchange rates, with JSONP:
+$.ajax({
+    url: 'http://openexchangerates.org/latest.json',
+    dataType: 'jsonp',
+    success: function(json) {
+        // Rates are in `json.rates`
+        // Base currency (USD) is `json.base`
+        // UNIX Timestamp when rates were collected is in `json.timestamp`
+        
+        // If you're using money.js, do this:
+        fx.rates = json.rates;
+        fx.base = json.base;
+    }
+});</pre>
+			<p>Use of <acronym title="JSON with Padding">JSONP</acronym> is optional - jQuery will append a <code>callback</code> parameter to the URL, and the response will be <a href="http://openexchangerates.org/latest.json?callback=whoaYeahCrazyCallback" title="Example of wrapped data" target="_blank">wrapped</a>. This is to prevent access-control (CORS) issues and will save you some headaches in many cases, though for security it's not tip-top (actually, if security is a primary concern in your app, you should proxy the results on your own server to prevent 100% against XSS attacks. I don't think the free proxy will support HTTPS any time soon).</p>
+			
+			<p>The <code>success</code> callback is asynchronous - meaning that if you have code to be run straight away, which relies on the exchange rates being available, this code should be inside the callback. The rest of your program will keep on executing while that AJAX request is waiting.</p>
+
+
+			<h4 id="nodejs-npm">nodeJS (<em>npm</em> module)</h4>
+
+			<p>If you want to load the rates in nodeJS, I made a handy <code>npm</code> module that can be installed with <strong>`<code>npm install exchange-rates</code>`</strong>. It will make a request using <em>http-agent</em> to fetch the data, then fire a continuation (callback) once they are available. Usage is pretty simple:</p>
+			<pre class="prettyprint lang-js">// Example usage with money.js, loading data from the openexchangerates.org API:
+var fx = require('money');
+var exchange = require('exchange-rates');
+
+// Fire the load function:
+exchange.load(function(error, data) {
+    // Check it worked:
+    if ( error ) throw error;
+
+    // Apply exchange rates and base rate to money.js `fx` object:
+    fx.rates = data.rates;
+    fx.base = data.base;
+
+    // This should now work
+    console.log('ten dollar? ' + fx(10).from('USD').to('GBP').toFixed(2));
+    
+    // NB: use of money.js is optional - use the rates however you like.
+});</pre>
+			<p>You can also access historical data by setting the first <code>url</code> argument like so:</p>
+			
+			<pre class="prettyprint lang-js">// Load historical data:
+var exchange = require('exchange-rates');
+
+exchange.load('http://openexchangerates.org/historical/2006-02-16.json', function(error, data) {
+    // etc...
+});</pre>
+
+			<p>NB: the <em>exchange-rates</em> <code>npm</code> module is not restricted to loading from the default openexchangerates.org proxy - you can use it to load data from anywhere, and define your own <code>exchange.parse</code> function to parse different types of data.</p>
+
+
+			<h4 id="nodejs-httpagent">nodeJS (httpAgent)</h4>
+
+			<p>If you don't want to use the <code>npm</code> module, you can use a simple <em>http-agent</em> to grab the data.</p>
+			<p>Example coming soon...</p>
+
+
+			<h4 id="php-curl">PHP (CURL)</h4>
 
 			<p>Coming soon...</p>
 
+
+			<h4 id="python">Python</h4>
+
+			<p>Coming soon...</p>
 
 
 		</div>
