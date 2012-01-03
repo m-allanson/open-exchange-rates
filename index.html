@@ -255,7 +255,34 @@ exchange.load('http://openexchangerates.org/historical/2006-02-16.json', functio
 
 			<h4 id="php-curl">PHP (CURL)</h4>
 
-			<p>Coming soon...</p>
+			<p>If you want to use the exchange rates in PHP, you can easily access the API with CURL, using something like this:</p>
+			
+			<pre class="prettyprint lang-php">&lt;?php
+// Required file, could be e.g. '/historical/2011-01-01.json' or 'currencies.json'
+$filename = 'latest.json';
+
+// Open CURL session:
+$ch = curl_init('http://openexchangerates.org/' . $filename);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+// Get the data:
+$json = curl_exec($ch);
+curl_close($ch);
+
+// Decode JSON response:
+$exchangeRates = json_decode($json);
+
+// You can now access the rates inside the parsed object, like so:
+printf(
+	&quot;1 %s in GBP: %s (as of %s)&quot;,
+	$exchangeRates-&gt;base,
+	$exchangeRates-&gt;rates-&gt;GBP,
+	date('h:i jS F, Y', $exchangeRates-&gt;timestamp)
+);
+// -&gt; eg. &quot;1 USD in GBP: 0.643749 (as of 11:01, 3rd January 2012)&quot;
+
+// To bootstrap the rates into JavaScript (using money.js) from PHP, you can do this:
+echo '&lt;script&gt;fx.rates = ' . json_encode($exchangeRates->rates) . '; fx.base = ' . json_encode($exchangeRates->base) . '&lt;/script&gt;';</pre>
 
 
 			<h4 id="python">Python</h4>
