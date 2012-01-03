@@ -43,7 +43,7 @@
 			<p>The rates are available historically for any day since the project started, and could soon be extended to provide data going back several years.</p>
 			<p>All rates are relative to USD (currently) - you only need the conversion rates relative to any single currency in order to compute the rate between any other two currencies - see the documentation for more.</p>
 
-			<p>The code and data are available at <a href="http://github.com/currencybot/open-exchange-rates" title="currencybot/open-exchange-rates github api">currencybot/open-exchange-rates</a>, and mirrored with friendly <code>Access-Control</code> HTTP headers and optional <acronym title="JSON with Padding">JSONP</acronym> support (for cross-domain/AJAX requests) on the free proxy at <a href="http://openexchangerates.org/latest.php" title="openexchangerates.org API proxy service" target="_blank">openexchangerates.org</a>.</p>
+			<p>The code and data are available at <a href="http://github.com/currencybot/open-exchange-rates" title="currencybot/open-exchange-rates github api">currencybot/open-exchange-rates</a>, and mirrored with friendly <code>Access-Control</code> HTTP headers and optional <acronym title="JSON with Padding">JSONP</acronym> support (for cross-domain/<acronym title="Asynchronous JavaScript and AJAX">AJAX</acronym> requests) on the free proxy at <a href="http://openexchangerates.org/latest.php" title="openexchangerates.org API proxy service" target="_blank">openexchangerates.org</a>.</p>
 
 
 			<h3>API Design and Specification</h3>
@@ -76,7 +76,7 @@
 
 			<h4>Accessing the API (available URLs)</h4>
 
-			<p>The Open Source Exchange Rates API is available on GitHub (via the direct 'raw' link to the JSON data files) and also available via a proxy (with friendly <code>Access-Control</code> headers and JSONP support, for cross-domain/AJAX requests) at openexchangerates.org.</p>
+			<p>The Open Source Exchange Rates API is available on GitHub (via the direct 'raw' link to the JSON data files) and also available via a proxy (with friendly <code>Access-Control</code> headers and JSONP support, for cross-domain/<acronym title="Asynchronous JavaScript and AJAX">AJAX</acronym> requests) at openexchangerates.org.</p>
 			<p>The <a href="https://raw.github.com/currencybot/open-exchange-rates/master/latest.json" title="latest exchange rates json">latest.json</a> file always contains the most up-to-date exchange rates:</p>
 			<pre>https://raw.github.com/currencybot/open-exchange-rates/master/latest.json</pre>
 			<p>For <strong>AJAX / cross-domain requests</strong> in JavaScript, the raw links will not work in many situations, because GitHub doesn't send the appropriate headers for cross-origin resource sharing (in most browsers you will see an error saying "Origin [yourdomain] is not allowed by..." - so you can also access the API via the proxy at <a href="http://openexchangerates.org/latest.json" title="openexchangerates.org API proxy service">openexchangerates.org</a></code>:</p>
@@ -151,6 +151,7 @@ http://openexchangerates.org/historical/2011-10-18.json</pre>
 				<li><h5>Get the rates:</h5>
 					<ul>
 						<li><a href="#javascript-ajax-jquery" title="JavaScript (AJAX / jQuery)">JavaScript (AJAX / jQuery)</a></li>
+						<li><a href="#javascript-bootstrapped" title="JavaScript (Bootstrapped)">JavaScript (Bootstrapped)</a></li>
 						<li><a href="#nodejs-npm" title="nodeJS / npm module">nodeJS (<em>npm</em> module)</a></li>
 						<li><a href="#nodejs-httpagent" title="nodeJS / httpAgent">nodeJS (httpAgent)</a></li>
 						<li><a href="#php-curl" title="PHP (CURL)">PHP (CURL)</a></li>
@@ -194,7 +195,7 @@ gbp_hkd = usd_hkd * (1 / usd_gbp)</pre>
 
 			<h4 id="javascript-ajax-jquery">JavaScript (AJAX / jQuery)</h4>
 
-			<p>You can easily load the rates into an application or website with JavaScript. I recommend using jQuery because it'll save you a tonne of headaches, and statistically speaking, you're probably already using it in your page/app:</p>
+			<p>You can easily load the rates into an application or website with JavaScript using an <acronym title="Asynchronous JavaScript and AJAX">AJAX</acronym> request. I recommend using jQuery because it'll save you a tonne of headaches, and statistically speaking, you're probably already using it in your page/app:</p>
 			<pre class="prettyprint">// Use jQuery.ajax to get the latest exchange rates, with JSONP:
 $.ajax({
     url: 'http://openexchangerates.org/latest.json',
@@ -209,9 +210,23 @@ $.ajax({
         fx.base = json.base;
     }
 });</pre>
-			<p>Use of <acronym title="JSON with Padding">JSONP</acronym> is optional - jQuery will append a <code>callback</code> parameter to the URL, and the response will be <a href="http://openexchangerates.org/latest.json?callback=whoaYeahCrazyCallback" title="Example of wrapped data" target="_blank">wrapped</a>. This is to prevent access-control (CORS) issues and will save you some headaches in many cases, though for security it's not tip-top (actually, if security is a primary concern in your app, you should proxy the results on your own server to prevent 100% against XSS attacks. I don't think the free proxy will support HTTPS any time soon).</p>
+			<p>Use of <acronym title="JSON with Padding">JSONP</acronym> is optional - jQuery will append a <code>callback</code> parameter to the URL, and the response will be <a href="http://openexchangerates.org/latest.json?callback=whoaYeahCrazyCallback" title="Example of wrapped data" target="_blank">wrapped</a>. This is to prevent access-control (CORS) issues and will save you some headaches in many cases, though for security it's not tip-top (actually, if security is a primary concern in your app, you should proxy the results on your own server to prevent 100% against <acronym title="Cross-Site Scripting">XSS</acronym> attacks. I don't think the free proxy will support HTTPS any time soon).</p>
 			
 			<p>The <code>success</code> callback is asynchronous - meaning that if you have code to be run straight away, which relies on the exchange rates being available, this code should be inside the callback. The rest of your program will keep on executing while that AJAX request is waiting.</p>
+
+
+
+			<h4 id="javascript-bootstrapped">JavaScript (Bootstrapped)</h4>
+
+			<p>To avoid using <acronym title="Asynchronous JavaScript and AJAX">AJAX</acronym>, or in places where greater security is needed, you can 'bootstrap' the exchange rate data into the page, using a server-side language like PHP.</p>
+			<p>The advantages of this method are that the exchange rate data is <em>immediately available</em> (instead of having to wait for an AJAX response) as well as greater security (prevention against <acronym title="Cross-Site Scripting">XSS</acronym> attacks.)</p>
+			<p>You can do this in any server-side language, but the end result is to have a <code>&lt;script&gt;</code> block in your HTML markup that contains the data, accessible to JavaScript, as shown here. Note that this example is for a website/app using money.js, but you could easily replace <code>fx.rates</code> and <code>fx.base</code> with your own variables:</p>
+			<pre class="prettyprint">&lt;script&gt;
+    fx.rates = {"AED":3.6731,"AFN":43.330002,/* ... */"ZWL":322.355011};
+    fx.base = "USD";
+&lt;/script&gt;</pre>
+
+			<p>See the <a href="#php-curl" title="PHP (CURL)">PHP / CURL</a> section for an example of how this is done in PHP - the logic is exactly the same in whichever backend language you're using.</p>
 
 
 			<h4 id="nodejs-npm">nodeJS (<em>npm</em> module)</h4>
@@ -255,7 +270,7 @@ exchange.load('http://openexchangerates.org/historical/2006-02-16.json', functio
 
 			<h4 id="php-curl">PHP (CURL)</h4>
 
-			<p>If you want to use the exchange rates in PHP, you can easily access the API with CURL, using something like this:</p>
+			<p>If you want to use the exchange rates in PHP, you can easily access the API with <a href="http://php.net/manual/en/book.curl.php" title="CURL" target="_blank">CURL</a>, using something like this:</p>
 			
 			<pre class="prettyprint lang-php">&lt;?php
 // Required file, could be e.g. '/historical/2011-01-01.json' or 'currencies.json'
@@ -274,20 +289,21 @@ $exchangeRates = json_decode($json);
 
 // You can now access the rates inside the parsed object, like so:
 printf(
-	&quot;1 %s in GBP: %s (as of %s)&quot;,
-	$exchangeRates-&gt;base,
-	$exchangeRates-&gt;rates-&gt;GBP,
-	date('h:i jS F, Y', $exchangeRates-&gt;timestamp)
+    &quot;1 %s in GBP: %s (as of %s)&quot;,
+    $exchangeRates-&gt;base,
+    $exchangeRates-&gt;rates-&gt;GBP,
+    date('h:i jS F, Y', $exchangeRates-&gt;timestamp)
 );
-// -&gt; eg. &quot;1 USD in GBP: 0.643749 (as of 11:01, 3rd January 2012)&quot;
+// -&gt; eg. &quot;1 USD in GBP: 0.643749 (as of 11:01, 3rd January 2012)&quot;</pre>
 
-// To bootstrap the rates into JavaScript (using money.js) from PHP, you can do this:
+			<p>You can use PHP to 'bootstrap' the rates into JavaScript for client-side access (see the <a href="#javascript-bootstrapped" title="JavaScript (Bootstrapped)">JavaScript / Bootstrapped</a> section to see why you might want to do this). This example assumes you're using money.js, but you can simply replace <code>fx.rates</code> and <code>fx.base</code> with your own variables:</p>
+			<pre class="prettyprint lang-php">// Bootstrap the rates into JavaScript for money.js:
 echo '&lt;script&gt;fx.rates = ' . json_encode($exchangeRates->rates) . '; fx.base = ' . json_encode($exchangeRates->base) . '&lt;/script&gt;';</pre>
 
 
 			<h4 id="python">Python</h4>
 
-			<p>Coming soon...</p>
+			<p>Example coming soon...</p>
 
 
 		</div>
