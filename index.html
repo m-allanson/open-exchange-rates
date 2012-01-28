@@ -27,13 +27,26 @@
 
 		<div id="main" role="main">
 
+			<!-- Lead -->
 			<p>The <strong>Open Source Exchange Rates API</strong> project was designed to address a glaring problem with exchange rate data on the internet: there's an untold number of free <em>currency conversion services</em>, but no free/reliable place for developers to access the rates that power them.</p>
 
 			<p>Originally built to integrate seamlessly with <a href="http://josscrowcroft.github.com/money.js/" title="money.js - tiny (1kb) javascript library for real-time currency conversion" target="_blank">money.js</a>, the API provides up-to-date, flexible and portable currency conversion data that can be used in any application, framework or language (not just JavaScript).</p>
 
 			<p><a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="josscrowcroft" data-url="http://josscrowcroft.github.com/open-exchange-rates/" data-text="Open Source Exchange Rates API - free hourly-updated currency data on GitHub">Tweet</a> &nbsp; <g:plusone size="medium"></g:plusone></p>
 
-			<h4>Introduction</h4>
+			<!-- List of Contents -->
+			<ul>
+				<li><a href="#introduction" title="Introduction">Introduction</a></li>
+				<li><a href="#api-specification" title="API Design and Specification">API Design and Specification</a></li>
+				<li><a href="#documentation" title="Documentation and Examples">Documentation &amp; Examples</a></li>
+				<li><a href="#showcase" title="Showcase">Showcase</a></li>
+				<li><a href="#meet-the-team" title="Meet the team">Meet the team</a></li>
+			</ul>
+
+
+			<!-- Introduction -->
+
+			<h4 id="introduction">Introduction</h4>
 
 			<p><em>&ldquo;They want <strong>how much</strong> for their exchange-rates API?!&rdquo;</em></p>
 
@@ -46,7 +59,10 @@
 			<p>The code and data are available at <a href="http://github.com/currencybot/open-exchange-rates" title="currencybot/open-exchange-rates github api">currencybot/open-exchange-rates</a>, and mirrored with friendly <code>Access-Control</code> HTTP headers and optional <acronym title="JSON with Padding">JSONP</acronym> support (for cross-domain/<acronym title="Asynchronous JavaScript and AJAX">AJAX</acronym> requests) on the free proxy at <a href="http://openexchangerates.org/latest.php" title="openexchangerates.org API proxy service" target="_blank">openexchangerates.org</a>.</p>
 
 
-			<h3>API Design and Specification</h3>
+
+			<!-- API Design and Specification -->
+
+			<h3 id="api-specification">API Design and Specification</h3>
 
 			<h4>Data Preview:</h4>
 
@@ -72,6 +88,7 @@
 	"ANG": "Neth Antilles Guilder",
 	"ARS": "Argentine Peso",
 	/* see [<a href="https://raw.github.com/currencybot/open-exchange-rates/master/currencies.json" title="open exchange rates project - available currencies" target="_blank">currencies.json</a>] for the full list */</pre>
+
 
 
 			<h4>Accessing the API (available URLs)</h4>
@@ -104,21 +121,25 @@ http://openexchangerates.org/historical/2011-10-18.json</pre>
 
 			<p>The API is delivered in <acronym title="JavaScript Object Notation">JSON</acronym> format. Here's a description of every property in the JSON object:</p>
 
+
 			<h5>disclaimer</h5>
 
 			<p>A reminder to anybody using/viewing the API data (possibly out-of-context) that its accuracy and availability are never guaranteed, and that there's no warranty provided. I'm open to rewriting this if anybody has suggestions on what to include (I'm no legal boffin!)</p>
 			<pre class="prettyprint">"disclaimer": "This data is collected from various providers and provided free of charge for informational purposes only, with no guarantee whatsoever of accuracy, validity, availability or fitness for any purpose; use at your own risk. Other than that - have fun, and please share/watch/fork if you think data like this should be free!"</pre>
 
+
 			<h5>license</h5>
 
 			<p>Similar to the <code>disclaimer</code>, if people see this API out-of-context, it's important that they realise it's free and open source:</p>
 			<pre class="prettyprint">"license": "all code open-source under GPL v3 [http://www.opensource.org/licenses/GPL-3.0]. all data made available by various providers; copyright may apply; not for resale; no warranties given."</pre>
-			
+
+
 			<h5>timestamp</h5>
 
 			<p>The <code>timestamp</code> (UNIX time) is given so that users/developers can check when this data was gathered. This could be useful for determining whether the file is up-to-date or providing an <em>&ldquo;Exchange Rates collected on: [date]&rdquo;</em> message, and is especially handy when accessing historical data.</p>
 			<p>NB: If you're using the <code>timestamp</code> value in JavaScript, remember to multiply it by 1000 as JavaScript uses time in milliseconds instead of seconds.</p>
 			<pre class="prettyprint">"timestamp": 1318326416</pre>
+
 
 			<h5>base</h5>
 
@@ -126,7 +147,9 @@ http://openexchangerates.org/historical/2011-10-18.json</pre>
 			<p>NB: <code>base</code> is always <code>"USD"</code>, at least for now, but it's good practice to double-check.</p>
 			<pre class="prettyprint">"base": "USD"</pre>
 
+
 			<h5>rates</h5>
+
 			<p>The object containing all the conversion rates for all of the available currencies, labeled by their international-standard 3-letter currency codes.</p>
 			<p>All the values in <code>rates</code> are relative to the <code>base</code> currency (e.g. <code>1 USD : AED 3.67</code>), and the <code>base</code> currency is included (e.g. <code>"USD": 1</code>). It's possible to compute the rate between any of the currencies by taking into account the <code>base</code> rate; see the <a href="#documentation" title="open source exchange rates documentation">documentation</a> for more on this.</p>
 			<pre class="prettyprint">"rates": {
@@ -135,6 +158,9 @@ http://openexchangerates.org/historical/2011-10-18.json</pre>
 	// etc...</pre>
 			<p>You can use <a href="https://raw.github.com/currencybot/open-exchange-rates/master/currencies.json" title="open exchange rates project - available currencies" target="_blank">currencies.json</a> for a JSON-formatted mapping between the three-letter currency codes and the full currency names.</p>
 
+
+
+			<!-- Documentation / Examples -->
 
 			<h3 id="documentation">Documentation &amp; Examples</h3>
 			
@@ -306,9 +332,23 @@ echo '&lt;script&gt;fx.rates = ' . json_encode($exchangeRates->rates) . '; fx.ba
 			<p>Example coming soon...</p>
 
 
+
+			<!-- Showcase -->
+
+			<h3 id="showcase">Showcase</h3>
+
+<!--
+			<p>Android Currency Widget</p>
+			<p><img src="images/showcase/android-currency-widget.jpg" alt="Android Currency Widget" /></p>
+-->
+
+			<p>Are you using the Open Exchange Rates data in your application? <a href="http://www.josscrowcroft.com/contact/" title="Contact Joss">Get in touch</a> and I'll add you to the showcase!</p>
+
+
 		</div>
+
 		<footer>
-			<h3>Meet the team:</h3>
+			<h3 id="meet-the-team">Meet the team:</h3>
 			<ul>
 				<li><a href="http://www.josscrowcroft.com" title="Joss" target="_blank">Joss</a> - designer / author of this project, as well as <a href="http://josscrowcroft.github.com/money.js/" title="money.js - tiny (1kb) javascript library for real-time currency conversion">money.js</a>, <a href="http://josscrowcroft.github.com/accounting.js" title="accounting.js - format money and numbers in javascript">accounting.js</a>, <a href="http://www.josscrowcroft.com/demos/motioncaptcha/" title="motionCAPTCHA - stop spam, draw shapes">motionCAPTCHA</a>, and a few other things; writes about JavaScript, CSS, design and other niceties.</li>
 				<li><a href="http://demandanalytics.com" title="demand analytics" target="_blank">demand analytics</a> - the company sponsoring the hosting and development of the Open Exchange Rates project and several of Joss's other weird ideas.</li>
