@@ -263,13 +263,13 @@ var fx = require('money');
 var exchange = require('exchange-rates');
 
 // Fire the load function:
-exchange.load(function(error, data) {
+exchange.load(function(error) {
     // Check it worked:
     if ( error ) throw error;
 
     // Apply exchange rates and base rate to money.js `fx` object:
-    fx.rates = data.rates;
-    fx.base = data.base;
+    fx.rates = exchange.rates;
+    fx.base = exchange.base;
 
     // This should now work
     console.log('ten dollar? ' + fx(10).from('USD').to('GBP').toFixed(2));
